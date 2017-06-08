@@ -8,6 +8,7 @@ When the alarm startm the application try to connect the IoB . If it didn't mana
 
 Of course if you go back to bed within a short amount of time (15 min) the alarm is trigger again. 
 
+You can find all the information about this project hackaday.io: https://hackaday.io/project/25330-internet-of-beds
 
 The android application is base on Clock+ designed by Phillip Hsu wich have been modified to fit my needs. Thank you very much PHILLIP HSU!!
 
