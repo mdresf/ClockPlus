@@ -1,4 +1,17 @@
-# Clock+
+#Internets of Beds
+
+IoB is a Bluetooth Low Energy weight sensor, placed under your bed, that force you to get-up in order to stop your alarm clock! 
+
+Two weight sensors (from a cheap scale) are placed under the bed frame. The sensors are connected to an Adafruit Feather 32u4 BLE via an HX711 . TheFeather board send the measured values to an Android alarm clock application through Bluetooth. 
+
+When the alarm startm the application try to connect the IoB . If it didn't manage ( IoB is out of reach, or you are not at home) the application remains a standard alarm clock. But if the connection is established, all the buttons are disabled and the only way to stop the music is to get-up. 
+
+Of course if you go back to bed within a short amount of time (15 min) the alarm is trigger again. 
+
+
+The android application is base on Clock+ designed by Phillip Hsu wich have been modified to fit my needs. Thank you very much PHILLIP HSU!!
+
+## Clock+
 Clock+ is a simple alarm clock, timer, and stopwatch app that offers a delightful user experience
 for all your timing needs.
 
@@ -21,7 +34,7 @@ intuitively designed for ease of use.
 <img src="https://cloud.githubusercontent.com/assets/19766085/19008498/8312eeaa-8720-11e6-9dc8-2079eb9c50f7.png" width="180" height="320" />
 <img src="https://cloud.githubusercontent.com/assets/19766085/19008382/cc800614-871f-11e6-8fab-d1be69807e91.png" height="320" />
 
-## License
+### License
 ```
 Copyright 2017 Phillip Hsu
 
