@@ -40,6 +40,8 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.philliphsu.clock2.alarms.ui.AlarmsFragment;
 import com.philliphsu.clock2.data.BaseItemCursor;
@@ -60,6 +62,7 @@ public class MainActivity extends BaseActivity {
     public static final int    PAGE_ALARMS          = 0;
     public static final int    PAGE_TIMERS          = 1;
     public static final int    PAGE_STOPWATCH       = 2;
+    public static final int    PAGE_BLE             = 3;
     public static final int    REQUEST_THEME_CHANGE = 5;
     public static final String EXTRA_SHOW_PAGE      = "com.philliphsu.clock2.extra.SHOW_PAGE";
 
@@ -74,6 +77,9 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.tabs)
     TabLayout mTabLayout;
+
+    @Bind (R.id.button2)
+    Button  mButton;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -164,8 +170,7 @@ public class MainActivity extends BaseActivity {
         setTabIcon(PAGE_ALARMS, R.drawable.ic_alarm_24dp, tabIconColor);
         setTabIcon(PAGE_TIMERS, R.drawable.ic_timer_24dp, tabIconColor);
         setTabIcon(PAGE_STOPWATCH, R.drawable.ic_stopwatch_24dp, tabIconColor);
-
-        // TODO: @OnCLick instead.
+      // setTabIcon(PAGE_BLE, R.drawable.ic_alarm_24dp, tabIconColor);//TODO: change icon
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,10 +180,13 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-
+}
+    public void onClickbutt(View view) {
+                    Toast.makeText(this,"Bouton 1", Toast.LENGTH_SHORT).show();
+        }
         mAddItemDrawable = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp);
         handleActionScrollToStableId(getIntent(), false);
-    }
+
 
     private void setTabIcon(int index, @DrawableRes int iconRes, @NonNull final ColorStateList color) {
         TabLayout.Tab tab = mTabLayout.getTabAt(index);
