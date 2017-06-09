@@ -19,6 +19,12 @@
 
 package com.philliphsu.clock2;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -40,7 +46,6 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.philliphsu.clock2.alarms.ui.AlarmsFragment;
@@ -50,6 +55,8 @@ import com.philliphsu.clock2.settings.SettingsActivity;
 import com.philliphsu.clock2.stopwatch.ui.StopwatchFragment;
 import com.philliphsu.clock2.timepickers.Utils;
 import com.philliphsu.clock2.timers.ui.TimersFragment;
+
+import java.util.Set;
 
 import butterknife.Bind;
 
@@ -62,12 +69,30 @@ public class MainActivity extends BaseActivity {
     public static final int    PAGE_ALARMS          = 0;
     public static final int    PAGE_TIMERS          = 1;
     public static final int    PAGE_STOPWATCH       = 2;
-    public static final int    PAGE_BLE             = 3;
     public static final int    REQUEST_THEME_CHANGE = 5;
     public static final String EXTRA_SHOW_PAGE      = "com.philliphsu.clock2.extra.SHOW_PAGE";
 
+    public BluetoothAdapter mBluetoothAdapter;
+    public BluetoothDevice  mBluetoothDevice;
+    public BluetoothGatt mBluetoothGatt;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private Drawable             mAddItemDrawable;
+    private static final int STATE_DISCONNECTED = 0;
+    private static final int STATE_CONNECTING = 1;
+    private static final int STATE_CONNECTED = 2;
+
+    public final static String ACTION_GATT_CONNECTED =
+            "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
+    public final static String ACTION_GATT_DISCONNECTED =
+            "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
+    public final static String ACTION_GATT_SERVICES_DISCOVERED =
+            "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
+    public final static String ACTION_DATA_AVAILABLE =
+            "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
+    public final static String EXTRA_DATA =
+            "com.example.bluetooth.le.EXTRA_DATA";
+
+
 
     @Bind(R.id.container)
     ViewPager mViewPager;
@@ -77,9 +102,6 @@ public class MainActivity extends BaseActivity {
 
     @Bind(R.id.tabs)
     TabLayout mTabLayout;
-
-    @Bind (R.id.button2)
-    Button  mButton;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -170,7 +192,8 @@ public class MainActivity extends BaseActivity {
         setTabIcon(PAGE_ALARMS, R.drawable.ic_alarm_24dp, tabIconColor);
         setTabIcon(PAGE_TIMERS, R.drawable.ic_timer_24dp, tabIconColor);
         setTabIcon(PAGE_STOPWATCH, R.drawable.ic_stopwatch_24dp, tabIconColor);
-      // setTabIcon(PAGE_BLE, R.drawable.ic_alarm_24dp, tabIconColor);//TODO: change icon
+
+        // TODO: @OnCLick instead.
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,14 +203,40 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-}
-    public void onClickbutt(View view) {
-                    Toast.makeText(this,"Bouton 1", Toast.LENGTH_SHORT).show();
-        }
+
         mAddItemDrawable = ContextCompat.getDrawable(this, R.drawable.ic_add_24dp);
         handleActionScrollToStableId(getIntent(), false);
 
 
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter= bluetoothManager.getAdapter();
+    }
+
+
+
+    public void onClickbutt(View view) {
+       // Toast.makeText(this, "Clic", Toast.LENGTH_SHORT).show();
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+        }
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+             for (BluetoothDevice device : pairedDevices) {
+            Log.d(TAG, "Device : address : " + device.getAddress() + " name :"+ device.getName());
+            if ("FF:CA:AA:32:0D:20".equals(device.getAddress())) {
+                mBluetoothDevice = device;
+                mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+                break;
+            }
+        }
+    }
+
+    final BluetoothGattCallback mGattCallback= new BluetoothGattCallback() {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            String state=Integer.toString(newState);
+            Toast.makeText(MainActivity.this,state, Toast.LENGTH_SHORT).show();
+        }
+    };
     private void setTabIcon(int index, @DrawableRes int iconRes, @NonNull final ColorStateList color) {
         TabLayout.Tab tab = mTabLayout.getTabAt(index);
         Drawable icon = Utils.getTintedDrawable(this, iconRes, color);
@@ -384,4 +433,9 @@ public class MainActivity extends BaseActivity {
             return mFragments.get(position);
         }
     }
+
+    // Initializes Bluetooth adapter.
+
+
+
 }
