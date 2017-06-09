@@ -1,0 +1,36 @@
+public void onClickbutt(View view) {
+                    Toast.makeText(this,"Bouton 1", Toast.LENGTH_SHORT).show();
+        }
+		
+		
+		
+		    // Initializes Bluetooth adapter.
+    final BluetoothManager bluetoothManager =
+            (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+    private BluetoothAdapter mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
+
+
+
+
+    public void onClickbutt(View view) {
+        Toast.makeText(this,"Clic", Toast.LENGTH_SHORT).show();
+        if ( !mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+        }
+		
+		
+		<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+
+    package="com.mdr.internet_of_beds">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+    </application>
+
+</manifest>
